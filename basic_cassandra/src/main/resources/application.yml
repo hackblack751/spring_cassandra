@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: basic_cassandra
+
+  cassandra:
+    keyspace-name: basic_cassandra
+    contact-points: 127.0.0.1
+    port: 9042
+    local-datacenter: datacenter1
+
+    # Connection pool setting
+    pool:
+      max-requests-per-connection: 1024
+      heartbeat-interval: 30s
+
+    request:
+      timeout: 10s
+
+    consistency-level: LOCAL_QUORUM
+    schema-action: none
+
+logging:
+  level:
+    com.datastax.oss.driver: INFO
+    org.springframework.data.cassandra: DEBUG
+    root: INFO
+
+
+app:
+  cassandra:
+    keyspace-name: basic_cassandra
+    contact-points: 127.0.0.1
+    port: 9042
+    local-datacenter: datacenter1
+
+    # Connection pool setting
+    pool:
+      max-requests-per-connection: 1024
+      heartbeat-interval: 30s
+
+    request:
+      timeout: 10s
+
+    consistency-level: LOCAL_QUORUM
+    schema-action: none
