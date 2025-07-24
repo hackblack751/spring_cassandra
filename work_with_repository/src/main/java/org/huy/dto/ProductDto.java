@@ -1,6 +1,7 @@
 package org.huy.dto;
 
 import lombok.Data;
+import org.huy.entity.ProductByCategory;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -20,4 +21,19 @@ public class ProductDto {
     private Integer stock;
 
     private Instant createdAt;
+
+    public ProductDto() {
+
+    }
+
+    public static ProductDto fromProductByCategory(ProductByCategory entity) {
+        ProductDto dto = new ProductDto();
+        dto.setCategory(entity.getKey().getCategory());
+        dto.setProductId(entity.getKey().getProductId());
+        dto.setPrice(entity.getKey().getPrice());
+        dto.setName(entity.getName());
+        dto.setStock(entity.getStock());
+
+        return dto;
+    }
 }
