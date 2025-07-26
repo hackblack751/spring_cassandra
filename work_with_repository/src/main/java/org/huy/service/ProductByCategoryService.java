@@ -3,10 +3,7 @@ package org.huy.service;
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.*;
 import com.datastax.oss.driver.api.core.metadata.schema.ClusteringOrder;
-import com.datastax.oss.driver.api.querybuilder.CqlSnippet;
-import com.datastax.oss.driver.api.querybuilder.Literal;
 import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
-import com.datastax.oss.driver.api.querybuilder.term.Term;
 import lombok.RequiredArgsConstructor;
 import org.huy.dto.ProductDto;
 import org.huy.dto.ProductModifyRequest;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

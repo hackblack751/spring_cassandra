@@ -1,7 +1,6 @@
 package org.huy.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.huy.dto.AbstractProductRequest;
 import org.huy.dto.ProductCreateRequest;
 import org.huy.dto.ProductModifyRequest;
 import org.huy.service.ProductService;
@@ -9,7 +8,6 @@ import org.huy.validator.ProductRequestValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.huy.util.AppUtils;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @NoArgsConstructor
