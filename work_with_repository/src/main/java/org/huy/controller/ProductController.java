@@ -1,15 +1,19 @@
 package org.huy.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.huy.dto.AbstractProductRequest;
+import org.huy.dto.ProductCreateRequest;
+import org.huy.dto.ProductModifyRequest;
 import org.huy.service.ProductService;
+import org.huy.validator.ProductRequestValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -17,6 +21,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+
+    private final ProductRequestValidator validator;
 
     @GetMapping("/search")
     public ResponseEntity<?> getProducts(@RequestParam String name) {
@@ -39,4 +45,32 @@ public class ProductController {
     public ResponseEntity<?> getProductsInCategories(@RequestParam List<String> categories) {
         return ResponseEntity.ok(this.productService.getProductsInCategories(categories));
     }
+
+    @PostMapping
+    public ResponseEntity<?> createProduct(@RequestBody ProductCreateRequest request) {
+        this.validator.validateProductRequest(request);
+
+        this.productService.createProduct(request);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProductById(@PathVariable UUID productId) {
+         boolean isDeleted = this.productService.deleteByProductId(productId);
+         if(!isDeleted) {
+             return ResponseEntity.notFound().build();
+         }
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateProduct(@RequestBody ProductModifyRequest request) {
+        this.validator.validateProductRequest(request);
+        this.productService.updateProduct(request);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

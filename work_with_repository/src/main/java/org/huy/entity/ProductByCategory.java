@@ -1,8 +1,6 @@
 package org.huy.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.*;
 
@@ -13,6 +11,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class ProductByCategory {
 
     @PrimaryKey
@@ -20,12 +20,14 @@ public class ProductByCategory {
 
     private String name;
 
-    private int stock;
+    private Integer stock;
 
     @PrimaryKeyClass
     @Getter
     @Setter
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class ProductByCategoryKey{
 
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
@@ -35,9 +37,24 @@ public class ProductByCategory {
         @Column("product_id")
         private UUID productId;
 
-        @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
+        @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED)
         private BigDecimal price;
     }
 
+    public static ProductByCategory fromProduct(Product product) {
+        return ProductByCategory.builder()
+                .key(makeKey(product))
+                .name(product.getName())
+                .stock(product.getStock())
+                .build();
+    }
+
+    public static ProductByCategoryKey makeKey(Product product) {
+        return ProductByCategoryKey.builder()
+                .category(product.getCategory())
+                .productId(product.getProductId())
+                .price(product.getPrice())
+                .build();
+    }
 
 }
