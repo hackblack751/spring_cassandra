@@ -15,6 +15,7 @@ import java.util.UUID;
 @Builder
 public class ProductByCategory {
 
+    /** Composite key. */
     @PrimaryKey
     private ProductByCategoryKey key;
 

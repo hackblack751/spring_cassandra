@@ -8,6 +8,8 @@ import org.huy.entity.Product;
 import org.huy.entity.ProductByCategory;
 import org.huy.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.cassandra.core.cql.CqlOperations;
+import org.springframework.data.cassandra.core.cql.CqlTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +29,8 @@ public class ProductService {
     private final ProductByCategoryService productByCategoryService;
 
     private final ModelMapper modelMapper;
+
+    private final CqlOperations cqlTemplate;
 
     public List<ProductDto> getProductsByName(String name) {
 //        List<Product> products = this.productRepository.findByName(name);
@@ -78,6 +82,7 @@ public class ProductService {
 
     /**
      * Ví dụ thực hiện DELETE bằng Spring Data Cassandra.
+     * Cassandra chỉ cho phép DELETE record đc identify bằng PRIMARY KEY.
      */
     public boolean deleteByProductId(UUID productId) {
         Optional<Product> result = this.productRepository.findById(productId);
@@ -116,4 +121,21 @@ public class ProductService {
        this.productByCategoryService.updateProductByCategory(key, request);
     }
 
+    /**
+     * Ví dụ sử dụng {@link CqlTemplate} de thực hiện INSERT.
+     */
+    public void updateStock(UUID productId, int stock) {
+        Optional<Product> result = this.productRepository.findById(productId);
+        if(result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "product not exist");
+        }
+
+        Product product = result.get();
+        String cql = "UPDATE product SET stock = ? WHERE product_id = ? AND created_at = ?";
+        cqlTemplate.execute(cql, stock, productId, product.getCreatedAt());
+
+        // synchronize data
+        product.setStock(stock);
+        this.productByCategoryService.updateProductByCategory(product);
+    }
 }

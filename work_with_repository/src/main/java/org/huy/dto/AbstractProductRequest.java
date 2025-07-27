@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.huy.constant.ProductCategory;
+import org.huy.util.AppUtils;
 
 import java.math.BigDecimal;
 
@@ -18,19 +19,19 @@ public abstract class AbstractProductRequest {
     private Integer stock;
 
     public boolean isValidCategory() {
-        return this.category != null;
+        return AppUtils.isValidProductCategory(this.category);
     }
 
     public boolean isValidStock() {
-        return this.stock != null && this.stock >= 0;
+        return AppUtils.isValidStock(this.stock);
     }
 
     public boolean isValidName() {
-        return this.name != null && !this.name.isBlank();
+        return AppUtils.isStringEmpty(this.name);
     }
 
     public boolean isValidPrice() {
-        return this.price != null && this.price.compareTo(BigDecimal.ZERO) > 0;
+        return AppUtils.isValidPrice(this.price);
     }
 
 }

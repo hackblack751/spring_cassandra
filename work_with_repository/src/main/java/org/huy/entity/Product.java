@@ -1,6 +1,7 @@
 package org.huy.entity;
 
 import lombok.*;
+import org.huy.dto.ProductCreateRequest;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -30,6 +31,7 @@ public class Product {
 
     private Integer stock;
 
+    /** clustering key. */
     @Column("created_at")
     private Instant createdAt;
 }

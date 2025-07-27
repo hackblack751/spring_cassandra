@@ -88,7 +88,6 @@ public class ProductByCategoryService {
     public void updateProductByCategory(ProductByCategory.ProductByCategoryKey key, ProductModifyRequest request) {
 
         Optional<ProductByCategory> result = this.productByCategoryRepository.findById(key);
-
         if(result.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "not exist product");
         }
@@ -110,6 +109,20 @@ public class ProductByCategoryService {
         this.productByCategoryRepository.save(productByCategory);
     }
 
+    public void updateProductByCategory(Product product) {
+        Optional<ProductByCategory> result = this.productByCategoryRepository.findById(
+                ProductByCategory.makeKey(product));
+        if(result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "not exist product");
+        }
+
+        ProductByCategory productByCategory = result.get();
+        productByCategory.setName(product.getName());
+        productByCategory.setStock(product.getStock());
+
+        this.productByCategoryRepository.save(productByCategory);
+    }
+
     public void foo() {
         int stockMin = 10;
 
@@ -123,6 +136,5 @@ public class ProductByCategoryService {
 
         this.cassandraTemplate.select(statement, ProductByCategory.class);
     }
-
 
 }

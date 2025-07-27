@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.huy.dto.ProductCreateRequest;
 import org.huy.dto.ProductModifyRequest;
 import org.huy.service.ProductService;
+import org.huy.util.AppUtils;
 import org.huy.validator.ProductRequestValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,16 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(@RequestBody ProductModifyRequest request) {
         this.validator.validateProductRequest(request);
         this.productService.updateProduct(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{productId}/stock")
+    public ResponseEntity<?> updateStock(@PathVariable String productId, @RequestParam Integer stock) {
+        if(!AppUtils.isValidUUID(productId)) return ResponseEntity.badRequest().body("invalid product id");
+        if(!AppUtils.isValidStock(stock)) return ResponseEntity.badRequest().body("invalid stock");
+
+        this.productService.updateStock(UUID.fromString(productId), stock);
 
         return ResponseEntity.ok().build();
     }
